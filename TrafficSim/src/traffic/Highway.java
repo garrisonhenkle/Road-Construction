@@ -5,32 +5,39 @@ public class Highway {
 	private final double MPH75 = 1.25; // miles per minute
 	private final double MPH40 = (2 / 3); // miles per minute
 	private final int LGTH = 25; // length of the highway in miles
-	private final int LGTHN = 20; // length of the normal highway in miles
-	private final int LGTHC = 5; // length of the construction zone in miles
 
 	// objects
 	private CarQueue con; // construction queue
 	private CarQueue norm; // normal queue
-	private CarQueue copy; // extra queue for copying
 	CarQueue q = null; // temporary pointer
 
 	// variables
+	private int LGTHN; // length of the normal highway in miles
+	private int LGTHC; // length of the construction zone in miles
 	private double cSpeed; // construction speed
 	private double nSpeed; // normal speed
 	private double speed; // active speed
 	private double tempPos; // temporary position holder
 	private double tempTime; // temporary time holder
 	protected int carLength = 100; // space a car needs in feet
-	private int sizeN = (int) (LGTHN / (carLength / 5280)); // max amount of cars that can fit in norm
-	private int sizeC = (int) (LGTHC / (carLength / 5280)); // max amount of cars that can fit in con
+	private int sizeN; // max amount of cars that can fit in norm (base on carLength)
+	private int sizeC; // max amount of cars that can fit in con ("" "")
 
 	/**
 	 * Constructor with no parameters
 	 */
-	public Highway() {
+	public Highway(int constructionLength) {
+		// set the length of the construction zone
+		LGTHC = constructionLength;
+		// set the length of the normal zone
+		LGTHN = LGTH - LGTHC;
+		// set the greatest size of the queues
+		sizeN = 1000;
+		sizeC = 1000;
+		// create the queues
 		con = new CarQueue(sizeC);
 		norm = new CarQueue(sizeN);
-		copy = new CarQueue(sizeN);
+
 	} // end constructor Highway
 
 	/**
@@ -228,15 +235,51 @@ public class Highway {
 	} // end method updatePos
 
 	public void transfer() {
-		if()
+		try {
+			con.enqueue(norm.dequeue());
+		} catch (QueueException ex) {
+			System.out.println("Unable to move the car between the normal and construction zones.");
+		}
 	} // end method transfer
 
-	public void add() {
+	public void add(int time) {
+		Car c = new Car(time);
+		try {
+			norm.enqueue(c);
+		} catch (QueueException ex) {
+			System.out.println("Unable to add car to the highway.  Insufficient amount of space.");
 
+		}
 	} // end method add
 
 	public Car remove() {
-		
+		try {
+			return con.dequeue();
+		} catch (QueueException ex) {
+			System.out.println("Unable to remove car from the highway.");
+		}
+		return null;
 	} // end method remove
+
+	public boolean hasEntered() {
+		if (norm.peek() != null) {
+			if (norm.peek().isInCon())
+				return true;
+			else
+				return false;
+		}
+		return false;
+
+	} // end method hasEntered
+
+	public boolean hasEnded() {
+		if (con.peek() != null) {
+			if (con.peek().hasLeft())
+				return true;
+			else
+				return false;
+		}
+		return false;
+	}
 
 } // end class Highway
