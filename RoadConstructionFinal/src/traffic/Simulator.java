@@ -11,9 +11,10 @@ public class Simulator {
 		Highway h = new Highway(endTime);
 
 		while (time < endTime) {
-			if (time % 15 == 0 && h.canAdd() == true) {
+			if (time % 15 == 0) {
 				h.addCar(time);
 			}
+			
 
 			time++;
 		}

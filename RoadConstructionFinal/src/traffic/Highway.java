@@ -7,9 +7,9 @@ public class Highway {
 	// constants and conversions
 	private final double MPH75 = 1.25; // miles per minute
 	private final double MPH40 = (2 / 3); // miles per minute
-	private final int LENGTH = 132000; // length of the highway in feet
-	private final int LENGTHNORM = 105600; // length of the normal highway in feet
-	private final int LENGTHCON = 26400; // length of the construction zone in feet
+	private final int LENGTH = 25; // length of the highway in miles
+	private final int LENGTHNORM = 20; // length of the normal highway in miles
+	private final int LENGTHCON = 5; // length of the construction zone in miles
 
 	// objects
 	private CarQueue con; // construction queue
@@ -39,7 +39,6 @@ public class Highway {
 			try {
 				norm.enqueue(c);
 			} catch (QueueException ex) {
-				System.out.println("Car cannot enter the road, the highway is full.");
 			}
 		}
 	}
@@ -51,6 +50,14 @@ public class Highway {
 			System.out.println("Car cannot enter the construction, the construction zone is full");
 		}
 	}
+	public void removeFromCon() {
+		try {
+			
+		} catch(QueueException ex) {
+			
+		}
+	}
+	
 
 	public void calcSpeed() {
 		if (norm.isPercent(90) == true)
@@ -75,25 +82,65 @@ public class Highway {
 		speeds[1][t++] = conSpeed;
 	}
 
-	// variables for calcPos
-	private int initT; // initial time
-	private int currPos; // current position
-
 	public void calcPos(Car c, int currTime) {
+		
+	}
+	
+	
+	
+	
+	// variables for calcExitTime
+	private int initT; // initial time
+	private int conT; // construction entry time
+	private double leftOverT; // left over time
+	private double leftOverP; // left over position
+	private int currPos; // current position
+	private int count; // counter
+	
+	public double calcExitTime(Car c, int currTime) {
 
-		initT = c.getEntryTime();
-
-		for (int i = initT; i < currTime; i++) {
-			
+		initT = c.getEntryTime(); //set the initial time
+		conT = (int)c.getConTime(); //set the integer value of the con enter time
+		leftOverT = c.getConTime() - conT; //decimal left over from con enter time's cast
+		count = initT; //count variable for the maintain position in the speeds array
+		
+		//from the initial entry time to the construction zone, add the the distance to the position
+		for (int i = initT; isInCon(currPos) == false; i++) {
+			currPos += speeds[0][i]; //speeds can be added directly because the time unit is 1 minute and the speeds are given as miles per minute
+			count++; //increase the counter to maintain positioning in the speed array for later
 		}
+		
+		//since the construction zone boolean does not take into account the decimal, it must be accounted for
+		currPos -= ((1-leftOverT) * speeds[0][count-1]); //remove (1 - (the decimal) ) * normSpeed 
+		currPos += ((1-leftOverT)* speeds[1][count-1]); //re-add (1 - (the decimal) ) but multiply it against the proper conSpeed
+		
+		//from the initial construction time + 1 to the end of highway, add the distance to the position
+		for(int i = count; hasExit(currPos);i++) {
+			currPos += speeds[1][i]; //adds the distance for one time unit
+			count++; //maintain positioning in the speed array
+		}
+		
+		//since the exit boolean does not take into account the decimal, it must be accounted for
+		c
 
-		c.setPos();
+	}
+
+	public void check() {
 
 	}
 
 	public boolean isInCon(int pos) {
-		if(pos >= )
+		if (pos >= LENGTHNORM)
+			return true;
+		else
+			return false;
+
 	}
 
-	public boolean isInCon()
+	public boolean hasExit(int pos) {
+		if (pos >= LENGTH)
+			return true;
+		else
+			return false;
+	}
 }
