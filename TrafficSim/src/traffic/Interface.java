@@ -3,24 +3,40 @@ package traffic;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
+/**
+ * Contains the user interface for the simulation and runs the simulation
+ * 
+ * Prompts the user to enter the data needed for the simulation, then runs the
+ * simulation with those parameters
+ * 
+ * @author Garrison Henkle
+ * @since 1.8
+ *
+ */
 public class Interface {
 
 	// variables
-	private int max;
-	private int rate;
-	private int length;
-	private int maxTime;
-	private int finalRate;
-	private int conLength;
+	private int max; // internal max variable
+	private int rate; // internal rate variable
+	private int length; // internal length variable
+	private int maxTime; // endTime passed on to simulation
+	private int finalRate; // rate passed on to simulation
+	private int conLength; // construction zone length passed on to the simulation
 
 	// objects
 	private String input;
 
+	/**
+	 * Main method that prompts the user then runs the simulation with the given
+	 * parameters
+	 * 
+	 * @param args
+	 */
 	public static void main(String[] args) {
 		Interface i = new Interface();
 		Simulator trafficSim = i.prompt();
 		trafficSim.run(trafficSim.length);
-	}
+	} // end method main
 
 	/**
 	 * Prompts for input
@@ -100,7 +116,7 @@ public class Interface {
 		// set length
 		conLength = length;
 
-		// create a new simulator to return
+		// create a new simulator to return with the input data given
 		sim = new Simulator(maxTime, finalRate, conLength);
 
 		return sim;

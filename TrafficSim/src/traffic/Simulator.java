@@ -1,5 +1,13 @@
 package traffic;
 
+/**
+ * Contains the simulation and methods used by the simulation to collect and
+ * process data
+ * 
+ * @author Garrison Henkle
+ * @since 1.8
+ *
+ */
 public class Simulator {
 
 	private int time; // holds the simulated time in minutes
@@ -56,7 +64,7 @@ public class Simulator {
 			// mark the cars that have completed the 25 mile stretch and remove them from
 			// the queue, then calculate the time elapsed over the stretch of highway
 			h.markEnd(time);
-			if (h.hasEnded()) 
+			if (h.hasEnded())
 				calculate(h.remove());
 
 			// increment time
@@ -76,10 +84,9 @@ public class Simulator {
 
 		// compute the elapsed time
 		double timeElapsed = c.getEndTime() - c.getEntryTime();
-			
+
 		// add the resulting time to the outputs array and increase the count variable
 		outputs[count++] = timeElapsed;
-		
 
 	} // end method calculator
 

@@ -1,5 +1,14 @@
 package traffic;
 
+/**
+ * Contains methods to store and manipulate data in the highway structure
+ * 
+ * Uses queues to maintain the positions of cars in the road
+ * 
+ * @author Garrison Henkle
+ * @since 1.8
+ *
+ */
 public class Highway {
 	// constants
 	private final double MPH75 = 1.25; // miles per minute
@@ -234,6 +243,9 @@ public class Highway {
 		restoreCars(data, c);
 	} // end method updatePos
 
+	/**
+	 * Transfers a car from normal road to the construction zone
+	 */
 	public void transfer() {
 		try {
 			con.enqueue(norm.dequeue());
@@ -242,6 +254,13 @@ public class Highway {
 		}
 	} // end method transfer
 
+	/**
+	 * Adds a car with initial time <time> to the beginning of the road (normal
+	 * road)
+	 * 
+	 * @param time
+	 *            the initial starting time of the car
+	 */
 	public void add(int time) {
 		Car c = new Car(time);
 		try {
@@ -252,6 +271,11 @@ public class Highway {
 		}
 	} // end method add
 
+	/**
+	 * Removes a car from the end of the road (construction zone)
+	 * 
+	 * @return Car the Car removed from the road
+	 */
 	public Car remove() {
 		try {
 			return con.dequeue();
@@ -261,6 +285,11 @@ public class Highway {
 		return null;
 	} // end method remove
 
+	/**
+	 * Determines whether a car has entered the construction zone
+	 * 
+	 * @return true if the car is in the construction zone, false otherwise
+	 */
 	public boolean hasEntered() {
 		if (norm.peek() != null) {
 			if (norm.peek().isInCon())
@@ -272,6 +301,11 @@ public class Highway {
 
 	} // end method hasEntered
 
+	/**
+	 * Determines whether a car has left the highway (left the construction zone)
+	 * 
+	 * @return true if the car has finished the stretch or highway, false otherwise
+	 */
 	public boolean hasEnded() {
 		if (con.peek() != null) {
 			if (con.peek().hasLeft())
